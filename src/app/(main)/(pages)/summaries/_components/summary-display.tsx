@@ -67,15 +67,6 @@ export function SummaryDisplay({ summary }: SummaryDisplayProps) {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" disabled={!summary}>
-                <ArchiveX className="h-4 w-4" />
-                <span className="sr-only">Move to junk</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Move to junk</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!summary}>
                 <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Move to trash</span>
               </Button>
@@ -89,90 +80,16 @@ export function SummaryDisplay({ summary }: SummaryDisplayProps) {
                 <TooltipTrigger asChild>
                   <Button variant="ghost" size="icon" disabled={!summary}>
                     <Clock className="h-4 w-4" />
-                    <span className="sr-only">Snooze</span>
+                    <span className="sr-only">History</span>
                   </Button>
                 </TooltipTrigger>
               </PopoverTrigger>
-              <PopoverContent className="flex w-[535px] p-0">
-                <div className="flex flex-col gap-2 border-r px-2 py-4">
-                  <div className="px-4 text-sm font-medium">Snooze until</div>
-                  <div className="grid min-w-[250px] gap-1">
-                    <Button
-                      variant="ghost"
-                      className="justify-start font-normal"
-                    >
-                      Later today{" "}
-                      <span className="ml-auto text-muted-foreground">
-                        {format(addHours(today, 4), "E, h:m b")}
-                      </span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="justify-start font-normal"
-                    >
-                      Tomorrow
-                      <span className="ml-auto text-muted-foreground">
-                        {format(addDays(today, 1), "E, h:m b")}
-                      </span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="justify-start font-normal"
-                    >
-                      This weekend
-                      <span className="ml-auto text-muted-foreground">
-                        {format(nextSaturday(today), "E, h:m b")}
-                      </span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="justify-start font-normal"
-                    >
-                      Next week
-                      <span className="ml-auto text-muted-foreground">
-                        {format(addDays(today, 7), "E, h:m b")}
-                      </span>
-                    </Button>
-                  </div>
-                </div>
-                <div className="p-2">
-                  <Calendar />
-                </div>
-              </PopoverContent>
+              <PopoverContent className="flex h-24 w-[535px] p-0"></PopoverContent>
             </Popover>
-            <TooltipContent>Snooze</TooltipContent>
+            <TooltipContent>History</TooltipContent>
           </Tooltip>
         </div>
-        <div className="ml-auto flex items-center gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!summary}>
-                <Reply className="h-4 w-4" />
-                <span className="sr-only">Reply</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Reply</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!summary}>
-                <ReplyAll className="h-4 w-4" />
-                <span className="sr-only">Reply all</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Reply all</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!summary}>
-                <Forward className="h-4 w-4" />
-                <span className="sr-only">Forward</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Forward</TooltipContent>
-          </Tooltip>
-        </div>
-        <Separator orientation="vertical" className="mx-2 h-6" />
+        <Separator orientation="vertical" className="ml-auto h-6" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" disabled={!summary}>
@@ -191,7 +108,7 @@ export function SummaryDisplay({ summary }: SummaryDisplayProps) {
       <Separator />
       {summary ? (
         <div className="flex flex-1 flex-col">
-          <div className="flex items-start p-4">
+          <div className="flex h-32 items-start p-4">
             <div className="flex items-start gap-4 text-sm">
               <div className="grid gap-1">
                 <div className="mb-2  font-semibold">{summary.title}</div>
@@ -217,10 +134,10 @@ export function SummaryDisplay({ summary }: SummaryDisplayProps) {
             )}
           </div>
           <Separator />
-          <div className="whitespace-pre-wrap p-4 text-sm">
+          <div className="h-[800px] whitespace-pre-wrap pt-10 text-sm">
             <BlockEditor summary={summary} />
           </div>
-          <Separator className="mt-auto" />
+          <Separator />
           <div className="p-4">
             <form>
               <div className="grid gap-4">
