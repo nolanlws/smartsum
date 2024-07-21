@@ -26,35 +26,46 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AccountSwitcher } from "./account-switcher";
-import { MailDisplay } from "./summary-display";
-import { MailList } from "./summary-list";
+import { SummaryDisplay } from "./summary-display";
+import { SummaryList } from "./summary-list";
 import { Nav } from "./nav";
-import { type Mail } from "../data";
-import { useMail } from "../useMail";
 import { BlockEditor } from "@/components/custom/BlockEditor";
 
-interface MailProps {
+export type Summary = {
+  id: number;
+  userId: number;
+  title: string;
+  url: string;
+  summary: string;
+  categories: string;
+  read: boolean;
+  createdAt: string;
+};
+
+interface SummaryProps {
   accounts: {
     label: string;
     email: string;
     icon: React.ReactNode;
   }[];
-  mails: Mail[];
+  summaries: Summary[];
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
   navCollapsedSize: number;
 }
 
-export function Mail({
+export function Summary({
   accounts,
-  mails,
+  summaries,
   defaultLayout = [265, 440, 655],
   defaultCollapsed = false,
   navCollapsedSize,
-}: MailProps) {
+}: SummaryProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const [mail] = useMail();
-
+  const [summary, setSummary] = React.useState<Summary>();
+  const handleSetSummary = (summary: Summary) => {
+    setSummary(summary);
+  };
   return (
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
@@ -206,21 +217,20 @@ export function Mail({
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              <MailList items={mails} />
+              <SummaryList
+                summaries={summaries}
+                summary={summary}
+                handleSetSummary={handleSetSummary}
+              />
             </TabsContent>
-            <TabsContent value="unread" className="m-0">
-              <MailList items={mails.filter((item) => !item.read)} />
-            </TabsContent>
+            {/* <TabsContent value="unread" className="m-0">
+              <SummaryList items={summaries.filter((item) => !item.read)} />
+            </TabsContent> */}
           </Tabs>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]}>
-          {/* <MailDisplay
-            
-          /> */}
-          <BlockEditor
-            summary={mails.find((item) => item.id === mail.selected) || null}
-          />
+          <SummaryDisplay summary={summary} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>

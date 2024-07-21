@@ -3,7 +3,7 @@ import { summaries, highlights, notes } from "@/server/db/schema";
 import { NextResponse, type NextRequest } from "next/server";
 import { summaryQueue } from "@/server/queues"; // Import the queue
 
-type Highlight = {
+export type Highlight = {
   text: string;
   timestamp: string;
 };
@@ -45,6 +45,9 @@ export async function POST(req: NextRequest) {
         userId: user.id,
         url,
         summary: "", // Empty summary initially
+        title: "",
+        categories: "[]",
+        read: false,
       })
       .returning({ insertedId: summaries.id });
     const summaryId = summaryResult[0]?.insertedId;

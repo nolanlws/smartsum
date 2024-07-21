@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { accounts, mails } from "./data";
-import { Mail } from "./_components/summary";
+import { Summary } from "./_components/summary";
 import { getUserSummaries } from "./actions/getUserSummaries"; // Adjust the path according to your project structure
 import { db } from "@/server/db";
 
@@ -25,7 +25,7 @@ export default async function MailPage() {
     collapsed?.value !== "undefined" ? JSON.parse(collapsed.value) : undefined;
 
   return (
-    <Mail
+    <Summary
       accounts={accounts}
       mails={mails}
       summaries={summaries}

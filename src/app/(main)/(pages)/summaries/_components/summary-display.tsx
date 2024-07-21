@@ -39,12 +39,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { type Mail } from "../data";
+import { Summary } from "./summary";
+import { BlockEditor } from "@/components/custom/BlockEditor";
+import { Badge } from "@/components/ui/badge";
+import { getBadgeVariantFromLabel } from "./summary-list";
 
-interface MailDisplayProps {
-  mail: Mail | null;
+interface SummaryDisplayProps {
+  summary?: Summary;
 }
 
-export function MailDisplay({ mail }: MailDisplayProps) {
+export function SummaryDisplay({ summary }: SummaryDisplayProps) {
   const today = new Date();
 
   return (
@@ -53,7 +57,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!summary}>
                 <Archive className="h-4 w-4" />
                 <span className="sr-only">Archive</span>
               </Button>
@@ -62,7 +66,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!summary}>
                 <ArchiveX className="h-4 w-4" />
                 <span className="sr-only">Move to junk</span>
               </Button>
@@ -71,7 +75,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!summary}>
                 <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Move to trash</span>
               </Button>
@@ -83,7 +87,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <Popover>
               <PopoverTrigger asChild>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" disabled={!mail}>
+                  <Button variant="ghost" size="icon" disabled={!summary}>
                     <Clock className="h-4 w-4" />
                     <span className="sr-only">Snooze</span>
                   </Button>
@@ -142,7 +146,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         <div className="ml-auto flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!summary}>
                 <Reply className="h-4 w-4" />
                 <span className="sr-only">Reply</span>
               </Button>
@@ -151,7 +155,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!summary}>
                 <ReplyAll className="h-4 w-4" />
                 <span className="sr-only">Reply all</span>
               </Button>
@@ -160,7 +164,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!mail}>
+              <Button variant="ghost" size="icon" disabled={!summary}>
                 <Forward className="h-4 w-4" />
                 <span className="sr-only">Forward</span>
               </Button>
@@ -171,7 +175,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         <Separator orientation="vertical" className="mx-2 h-6" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" disabled={!mail}>
+            <Button variant="ghost" size="icon" disabled={!summary}>
               <MoreVertical className="h-4 w-4" />
               <span className="sr-only">More</span>
             </Button>
@@ -185,45 +189,41 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         </DropdownMenu>
       </div>
       <Separator />
-      {mail ? (
+      {summary ? (
         <div className="flex flex-1 flex-col">
           <div className="flex items-start p-4">
             <div className="flex items-start gap-4 text-sm">
-              <Avatar>
-                <AvatarImage alt={mail.name} />
-                <AvatarFallback>
-                  {mail.name
-                    .split(" ")
-                    .map((chunk) => chunk[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
               <div className="grid gap-1">
-                <div className="font-semibold">{mail.name}</div>
-                <div className="line-clamp-1 text-xs">{mail.subject}</div>
-                <div className="line-clamp-1 text-xs">
-                  <span className="font-medium">Reply-To:</span> {mail.email}
-                </div>
+                <div className="mb-2  font-semibold">{summary.title}</div>
+                <div className="mb-2 line-clamp-1 text-xs">{summary.url}</div>
+                {summary.categories.length ? (
+                  <div className="flex items-center gap-2">
+                    {JSON.parse(summary?.categories).map((category: string) => (
+                      <Badge
+                        key={category}
+                        variant={getBadgeVariantFromLabel(category)}
+                      >
+                        {category}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </div>
-            {mail.date && (
+            {summary.createdAt && (
               <div className="ml-auto text-xs text-muted-foreground">
-                {format(new Date(mail.date), "PPpp")}
+                {format(new Date(summary.createdAt), "PPpp")}
               </div>
             )}
           </div>
           <Separator />
-          <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
-            {mail.text}
+          <div className="whitespace-pre-wrap p-4 text-sm">
+            <BlockEditor summary={summary} />
           </div>
           <Separator className="mt-auto" />
           <div className="p-4">
             <form>
               <div className="grid gap-4">
-                <Textarea
-                  className="p-4"
-                  placeholder={`Reply ${mail.name}...`}
-                />
                 <div className="flex items-center">
                   <Button
                     onClick={(e) => e.preventDefault()}

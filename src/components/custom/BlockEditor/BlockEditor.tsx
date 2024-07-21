@@ -1,7 +1,7 @@
 "use client";
 
 import { EditorContent, PureEditorContent, useEditor } from "@tiptap/react";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { LinkMenu } from "@/components/custom/menus";
 
@@ -13,14 +13,17 @@ import { TableColumnMenu, TableRowMenu } from "@/extensions/Table/menus";
 import { TextMenu } from "../menus/TextMenu";
 import { ContentItemMenu } from "../menus/ContentItemMenu";
 import ExtensionKit from "@/extensions/extension-kit";
+import { Summary } from "@/app/(main)/(pages)/summaries/_components/summary";
 
-export const BlockEditor = ({ summary }) => {
+type BlockEditorProps = {
+  summary?: Summary;
+};
+
+export const BlockEditor = ({ summary }: BlockEditorProps) => {
   const menuContainerRef = useRef(null);
   const editorRef = useRef<PureEditorContent | null>(null);
-
   const editor = useEditor({
     autofocus: true,
-    content: summary,
     extensions: [...ExtensionKit({})],
     editorProps: {
       attributes: {
@@ -32,6 +35,12 @@ export const BlockEditor = ({ summary }) => {
     },
   });
 
+  useEffect(() => {
+    if (editor && summary?.summary !== "") {
+      editor.commands.setContent(summary.summary);
+    }
+  }, [summary]);
+
   if (!editor) {
     return null;
   }
@@ -39,11 +48,11 @@ export const BlockEditor = ({ summary }) => {
   return (
     // <EditorContext.Provider value={providerValue}>
     <div className="flex h-full" ref={menuContainerRef}>
-      <div className="relative flex h-full flex-1 flex-col overflow-hidden">
+      <div className="relative flex h-full flex-1 flex-col ">
         <EditorContent
           editor={editor}
           ref={editorRef}
-          className="flex-1 overflow-y-auto"
+          className="h-full overflow-auto"
         />
         <LinkMenu editor={editor} appendTo={menuContainerRef} />
         <TextMenu editor={editor} />

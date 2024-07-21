@@ -1,4 +1,5 @@
 import { OpenAI } from "openai";
+import { Highlight } from "./app/api/highlights/route";
 
 // Initialize OpenAI API
 const openai = new OpenAI({
@@ -6,16 +7,16 @@ const openai = new OpenAI({
 });
 
 async function createSummary(
-  highlights: string[],
+  highlights: Highlight[],
   notes: string[],
   url: string,
-): Promise<string> {
+): Promise<{ title: string; summary: string; categories: string[] }> {
   const prompt = `
   You are a highly intelligent and proficient assistant tasked with creating a summary for the provided content. 
-  Your summary must include 100% of the highlights and notes while contextualizing them within the website's overall content.
+  Summarize the provided highlights and notes while contextualizing them within the website's overall content.
   
   Highlights:
-  ${highlights.map((highlight, index) => `${index + 1}. ${highlight}`).join("\n")}
+  ${highlights.map((highlight, index) => `${index + 1}. ${highlight.text}`).join("\n")}
 
   Notes:
   ${notes.map((note, index) => `${index + 1}. ${note}`).join("\n")}
@@ -24,36 +25,154 @@ async function createSummary(
   ${url}
 
   Instructions:
-  - Create a coherent and concise summary that seamlessly integrates the highlights and notes.
-  - Use the context of the website to ensure the summary is relevant and informative.
+  - Create an extensive summary that integrates ALL of the provided highlights and notes and use the content of the provided website to ensure the summary is relevant and informative.
+  - The summary MUST ALWAYS contain the ALL the provided highlights and notes.
   - Format the summary in HTML.
-  - Categorize the highlights and notes into relevant sections.
-
-  Summary:
+  - Give the summary a title.
+  - Categorize the highlights and notes into really relevant categories (as many as you see fit), choose from the following categories: 
+      Science
+      Technology
+      Health
+      Education
+      Environment
+      Politics
+      Economics
+      Business
+      Finance
+      Culture
+      Art
+      History
+      Sports
+      Entertainment
+      Literature
+      Music
+      Movies
+      Television
+      Theater
+      Fashion
+      Travel
+      Food
+      Lifestyle
+      Personal Development
+      Psychology
+      Sociology
+      Philosophy
+      Religion
+      Ethics
+      Law
+      Crime
+      Conflict
+      War
+      Peace
+      Human Rights
+      Gender
+      Diversity
+      Technology
+      Innovation
+      Engineering
+      Space
+      Biology
+      Chemistry
+      Physics
+      Mathematics
+      Astronomy
+      Geography
+      Anthropology
+      Archaeology
+      Architecture
+      Automotive
+      Aviation
+      Maritime
+      Real Estate
+      Urban Development
+      Agriculture
+      Food Science
+      Nutrition
+      Fitness
+      Wellness
+      Mental Health
+      Medicine
+      Veterinary Science
+      Genetics
+      Microbiology
+      Ecology
+      Zoology
+      Botany
+      Environmental Science
+      Climate Change
+      Renewable Energy
+      Sustainability
+      Natural Resources
+      Wildlife Conservation
+      Marine Biology
+      Forestry
+      Geology
+      Seismology
+      Volcanology
+      Meteorology
+      Oceanography
+      Astrophysics
+      Cosmology
+      Nanotechnology
+      Robotics
+      Artificial Intelligence
+      Cybersecurity
+      Data Science
+      Blockchain
+      Virtual Reality
+      Augmented Reality
+      Gaming
+      E-commerce
+      Marketing
+      Advertising
+      Public Relations
+      Communications
+      Journalism
+      Social Media
+      Publishing
+  ALWAYS return an object with the following structure:
+  {
+    "title": "The title of the summary",
+    "summary": "The summary text",
+    "categories": ["Category1", "Category2", ...]
+  }
+    
   `;
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       messages: [{ role: "system", content: prompt }],
       max_tokens: 500,
       temperature: 0.7,
       n: 1,
-      stop: ["Summary:"],
     });
-
+    console.log(response.choices[0]?.message);
     if (response.choices[0]?.message?.content) {
-      return response.choices[0].message.content;
+      console.log(response.choices[0]?.message?.content);
+      const parsed = JSON.parse(response.choices[0]?.message?.content);
+      if (parsed.title && parsed.summary && Array.isArray(parsed.categories)) {
+        return parsed;
+      }
+      throw new Error("Unexpected response format from OpenAI");
     } else {
       throw new Error("No response from OpenAI");
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("Error creating summary:", error);
-      return `Error creating summary: ${error.message}`;
+      return {
+        summary: `Error creating summary: ${error.message}`,
+        title: "Error",
+        categories: [],
+      };
     } else {
       console.error("Unknown error:", error);
-      return "An unknown error occurred while creating the summary.";
+      return {
+        summary: "An unknown error occurred while creating the summary.",
+        title: "Error",
+        categories: [],
+      };
     }
   }
 }
@@ -74,7 +193,11 @@ export const register = async () => {
         console.log(summary);
         await db
           .update(summaries)
-          .set({ summary })
+          .set({
+            summary: summary.summary,
+            title: summary.title,
+            categories: JSON.stringify(summary.categories),
+          })
           .where(eq(summaries.id, summaryId));
       },
       {

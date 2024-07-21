@@ -1,5 +1,3 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
 import {
   integer,
   pgTableCreator,
@@ -9,6 +7,7 @@ import {
   varchar,
   numeric,
   text,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 import { relations } from "drizzle-orm";
@@ -155,8 +154,11 @@ export const summaries = createTable("summaries", {
   userId: integer("user_id")
     .references(() => users.id)
     .notNull(),
+  title: varchar("title", { length: 256 }).notNull(),
   url: varchar("url", { length: 1024 }).notNull(),
   summary: text("summary").notNull(),
+  categories: text("categories").notNull(),
+  read: boolean("read").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
