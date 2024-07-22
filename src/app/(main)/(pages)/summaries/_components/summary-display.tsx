@@ -43,14 +43,14 @@ import { Summary } from "./summary";
 import { BlockEditor } from "@/components/custom/BlockEditor";
 import { Badge } from "@/components/ui/badge";
 import { getBadgeVariantFromLabel } from "./summary-list";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SummaryDisplayProps {
   summary?: Summary;
 }
 
 export function SummaryDisplay({ summary }: SummaryDisplayProps) {
-  const today = new Date();
-
+  console.log(summary);
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center p-2">
@@ -134,24 +134,64 @@ export function SummaryDisplay({ summary }: SummaryDisplayProps) {
             )}
           </div>
           <Separator />
-          <div className="h-[800px] whitespace-pre-wrap pt-10 text-sm">
+          {/* <div className="h-[800px] whitespace-pre-wrap pt-10 text-sm"> */}
+          <ScrollArea className="mb-5 h-[calc(100vh-600px)]">
             <BlockEditor summary={summary} />
-          </div>
+          </ScrollArea>
+          {/* </div> */}
           <Separator />
-          <div className="p-4">
-            <form>
-              <div className="grid gap-4">
-                <div className="flex items-center">
-                  <Button
-                    onClick={(e) => e.preventDefault()}
-                    size="sm"
-                    className="ml-auto"
+          <div className="grid h-[400px] grid-cols-3 gap-4 pl-6">
+            {/* Left Cards Section */}
+            <div className="flex h-[400px] flex-col">
+              <p className="py-4 text-xl font-bold">Highlights</p>
+              <ScrollArea className="mb-24 rounded-lg border p-4">
+                {summary?.highlights.map((highlight: string, index: number) => (
+                  <div
+                    key={index}
+                    className="my-2 rounded-lg border p-4 shadow"
                   >
-                    Save
-                  </Button>
-                </div>
+                    {highlight}
+                  </div>
+                ))}
+                {/* Add more cards as needed */}
+              </ScrollArea>
+            </div>
+
+            {/* Middle Cards Section */}
+            <div className="flex h-[400px] flex-col">
+              <p className="py-4 text-xl font-bold">Notes</p>
+              <ScrollArea className="mb-24 rounded-lg border p-4">
+                {summary?.notes.map((note: string, index: number) => (
+                  <div
+                    key={index}
+                    className="my-2 rounded-lg border p-4 shadow"
+                  >
+                    {note}
+                  </div>
+                ))}
+                {/* Add more cards as needed */}
+              </ScrollArea>
+            </div>
+
+            {/* Button Section */}
+            <div className="flex h-[400px] flex-col justify-end">
+              <div className="mx-10 mb-24 flex justify-end space-x-4">
+                <Button
+                  onClick={(e) => e.preventDefault()}
+                  size="sm"
+                  className="bg-green-500 text-white hover:bg-green-600"
+                >
+                  Regenerate Summary
+                </Button>
+                <Button
+                  onClick={(e) => e.preventDefault()}
+                  size="sm"
+                  className="bg-blue-500 text-white hover:bg-blue-600"
+                >
+                  Save
+                </Button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       ) : (

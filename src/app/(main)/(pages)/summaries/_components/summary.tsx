@@ -40,6 +40,8 @@ export type Summary = {
   categories: string;
   read: boolean;
   createdAt: string;
+  notes: string[];
+  highlights: string[];
 };
 
 interface SummaryProps {
@@ -188,7 +190,7 @@ export function Summary({
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
+        <div className="flex w-[400px] flex-col border-r border-neutral-200 bg-background/50  dark:border-neutral-800">
           <Tabs defaultValue="all">
             <div className="flex items-center px-4 py-2">
               <h1 className="text-xl font-bold">Inbox</h1>
@@ -227,8 +229,7 @@ export function Summary({
               <SummaryList items={summaries.filter((item) => !item.read)} />
             </TabsContent> */}
           </Tabs>
-        </ResizablePanel>
-        <ResizableHandle withHandle />
+        </div>
         <ResizablePanel defaultSize={defaultLayout[2]}>
           <SummaryDisplay summary={summary} />
         </ResizablePanel>
