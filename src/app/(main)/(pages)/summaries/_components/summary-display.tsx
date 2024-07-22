@@ -50,7 +50,6 @@ interface SummaryDisplayProps {
 }
 
 export function SummaryDisplay({ summary }: SummaryDisplayProps) {
-  console.log(summary);
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center p-2">
