@@ -104,7 +104,6 @@ export function SummaryDisplay({ summary }: SummaryDisplayProps) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Separator />
       {summary ? (
         <div className="flex flex-1 flex-col">
           <div className="flex h-32 items-start p-4">
@@ -139,11 +138,11 @@ export function SummaryDisplay({ summary }: SummaryDisplayProps) {
           </ScrollArea>
           {/* </div> */}
           <Separator />
-          <div className="grid h-[400px] grid-cols-3 gap-4 pl-6">
+          <div className="grid h-[400px] grid-cols-3 gap-4 bg-foreground">
             {/* Left Cards Section */}
             <div className="flex h-[400px] flex-col">
               <p className="py-4 text-xl font-bold">Highlights</p>
-              <ScrollArea className="mb-24 rounded-lg border p-4">
+              <ScrollArea className="mb-24 rounded-lg bg-background p-4 shadow-md">
                 {summary?.highlights.map((highlight: string, index: number) => (
                   <div
                     key={index}
@@ -159,7 +158,7 @@ export function SummaryDisplay({ summary }: SummaryDisplayProps) {
             {/* Middle Cards Section */}
             <div className="flex h-[400px] flex-col">
               <p className="py-4 text-xl font-bold">Notes</p>
-              <ScrollArea className="mb-24 rounded-lg border p-4">
+              <ScrollArea className="mb-24 rounded-lg bg-background p-4 shadow-md">
                 {summary?.notes.map((note: string, index: number) => (
                   <div
                     key={index}

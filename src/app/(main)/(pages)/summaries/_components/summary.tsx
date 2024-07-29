@@ -110,7 +110,6 @@ export function Summary({
           >
             <AccountSwitcher isCollapsed={isCollapsed} accounts={accounts} />
           </div>
-          <Separator />
           <Nav
             isCollapsed={isCollapsed}
             links={[
@@ -152,7 +151,6 @@ export function Summary({
               },
             ]}
           />
-          <Separator />
           <Nav
             isCollapsed={isCollapsed}
             links={[
@@ -190,7 +188,7 @@ export function Summary({
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <div className="flex w-[400px] flex-col border-r border-neutral-200 bg-background/50  dark:border-neutral-800">
+        <div className="flex w-[400px] flex-col bg-foreground  ">
           <Tabs defaultValue="all">
             <div className="flex items-center px-4 py-2">
               <h1 className="text-xl font-bold">Inbox</h1>
@@ -209,8 +207,7 @@ export function Summary({
                 </TabsTrigger>
               </TabsList>
             </div>
-            <Separator />
-            <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="bg-foreground p-4 backdrop-blur supports-[backdrop-filter]:bg-foreground">
               <form>
                 <div className="relative">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />

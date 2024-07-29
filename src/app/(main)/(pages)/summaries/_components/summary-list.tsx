@@ -19,13 +19,13 @@ export function SummaryList({
 }: SummaryListProps) {
   return (
     <ScrollArea className="mb-5 h-[calc(100vh-200px)]">
-      <div className="flex flex-col gap-2 p-4 pt-0">
+      <div className="flex flex-col gap-4 p-4 pt-0">
         {summaries.map((item) => (
           <button
             key={item.id}
             className={cn(
-              "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
-              summary?.id === item.id && "bg-muted",
+              "flex flex-col items-start gap-4 rounded-lg bg-background p-3 text-left text-sm shadow-md transition-all",
+              summary?.id === item.id && "border-2 border-blue-500",
             )}
             onClick={() => handleSetSummary(item)}
           >
